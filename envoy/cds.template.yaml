@@ -3,6 +3,7 @@ resources:
     name: auth
     connect_timeout: 5s
     type: STRICT_DNS
+    dns_lookup_family: V4_ONLY
     dns_refresh_rate: 5s
     dns_failure_refresh_rate:
       base_interval: 1s
@@ -35,6 +36,7 @@ resources:
     name: rest
     connect_timeout: 5s
     type: STRICT_DNS
+    dns_lookup_family: V4_ONLY
     dns_refresh_rate: 5s
     dns_failure_refresh_rate:
       base_interval: 1s
@@ -67,6 +69,7 @@ resources:
     name: realtime
     connect_timeout: 5s
     type: STRICT_DNS
+    dns_lookup_family: V4_ONLY
     dns_refresh_rate: 5s
     dns_failure_refresh_rate:
       base_interval: 1s
@@ -99,6 +102,7 @@ resources:
     name: storage
     connect_timeout: 5s
     type: STRICT_DNS
+    dns_lookup_family: V4_ONLY
     dns_refresh_rate: 5s
     dns_failure_refresh_rate:
       base_interval: 1s
@@ -131,6 +135,7 @@ resources:
     name: functions
     connect_timeout: 5s
     type: STRICT_DNS
+    dns_lookup_family: V4_ONLY
     dns_refresh_rate: 5s
     dns_failure_refresh_rate:
       base_interval: 1s
@@ -162,6 +167,7 @@ resources:
     name: meta
     connect_timeout: 5s
     type: STRICT_DNS
+    dns_lookup_family: V4_ONLY
     dns_refresh_rate: 5s
     dns_failure_refresh_rate:
       base_interval: 1s
@@ -194,6 +200,7 @@ resources:
     name: studio
     connect_timeout: 5s
     type: STRICT_DNS
+    dns_lookup_family: V4_ONLY
     dns_refresh_rate: 5s
     dns_failure_refresh_rate:
       base_interval: 1s
