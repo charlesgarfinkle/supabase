@@ -143,6 +143,46 @@ resources:
                                     principals:
                                       - any: true
 
+                      # OAuth 2.1 Authorization Server endpoints (authorize/token/register).
+                      # Upstream's kong.yml has the same gap: the "Open Auth routes" allowlist
+                      # covers the legacy /authorize, /verify, /callback, jwks, and SSO routes,
+                      # plus the /.well-known/oauth-authorization-server metadata endpoint below,
+                      # but never exempts the newer OAuth 2.1 AS action endpoints themselves —
+                      # so they fall through to the generic /auth/v1/ catch-all and get rejected
+                      # by the apikey-required Lua filter before ever reaching GoTrue. A browser
+                      # navigating to /oauth/authorize can't attach an apikey header, and
+                      # /oauth/token's own client_secret/PKCE check is GoTrue's job, not the
+                      # gateway's — so this whole prefix needs the same public treatment as
+                      # /auth/v1/authorize above.
+                      - match:
+                          prefix: /auth/v1/oauth/
+                        route:
+                          cluster: auth
+                          prefix_rewrite: /oauth/
+                          timeout: 30s
+                        request_headers_to_add:
+                          - header:
+                              key: X-Forwarded-Prefix
+                              value: /auth/v1/oauth/
+                            append_action: ADD_IF_ABSENT
+                        typed_per_filter_config:
+                          envoy.filters.http.basic_auth:
+                            '@type': >-
+                              type.googleapis.com/envoy.config.route.v3.FilterConfig
+                            disabled: true
+                          envoy.filters.http.rbac:
+                            '@type': >-
+                              type.googleapis.com/envoy.extensions.filters.http.rbac.v3.RBACPerRoute
+                            rbac:
+                              rules:
+                                action: ALLOW
+                                policies:
+                                  allow_all:
+                                    permissions:
+                                      - any: true
+                                    principals:
+                                      - any: true
+
                       - match:
                           prefix: /auth/v1/.well-known/jwks.json
                         route:
